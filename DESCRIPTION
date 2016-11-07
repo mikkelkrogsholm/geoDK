@@ -1,0 +1,7 @@
+Package: geoDK
+Type: Package
+Title: Provides danish GIS data
+Version: 0.1.0
+Authors@R: person("Mikkel", "Krogsholm", email = "mikkel@56n.dk", role = c("aut", "cre"))
+Description: More about what it does (maybe more than one line)
+LazyData: TRUE
