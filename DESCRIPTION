@@ -1,9 +1,16 @@
 Package: geoDK
 Type: Package
-Title: Provides danish GIS data
-Version: 0.1.0
-Authors@R: person("Mikkel", "Krogsholm", email = "mikkel@56n.dk", role = c("aut", "cre"))
-Description: Provides danish GIS data
+Title: Provides Danish GIS data
+Version: 0.0.1.9999
+Author: Mikkel Freltoft Krogsholm
+Maintainer: Mikkel Freltoft Krogsholm <mikkel@56n.dk>
+Description: Provides data from Geodatestyrelsens REST API. Terms apply. 
+    Read more at: <https://kortforsyningen.dk/indhold/vilkaar-og-betingelser>.
 LazyData: TRUE
 License: MIT + file LICENSE
 RoxygenNote: 6.0.1
+Imports:
+    httr,
+    purrr,
+    rgdal,
+    jsonlite
