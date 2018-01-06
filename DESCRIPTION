@@ -5,3 +5,5 @@ Version: 0.1.0
 Authors@R: person("Mikkel", "Krogsholm", email = "mikkel@56n.dk", role = c("aut", "cre"))
 Description: Provides danish GIS data
 LazyData: TRUE
+License: MIT + file LICENSE
+RoxygenNote: 6.0.1
