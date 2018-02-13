@@ -42,48 +42,58 @@ Let me show you a few examples.
 #### First load packages
 ```{r example1_load}
 library(geoDK)
-library(leaflet)
+library(ggplot2)
+library(ggthemes)
 ```
 
 #### Plot regions
-```{r}
-data("geo_reg")
-geo_reg@data$regionkode <- as.numeric(geo_reg@data$regionkode)
+```{r regions}
+dk_regions <- geo_get_spatial("Danish regions")
 
-pal <- colorNumeric(
-  palette = "Blues",
-  domain = geo_reg$regionkode)
+df_regions <- make_tidy_poly(dk_regions)
 
-leaflet(geo_reg) %>%
-  addPolygons(stroke = FALSE, smoothFactor = 0.2, fillOpacity = 1,
-              color = ~pal(regionkode))
+ggplot(df_regions) +
+  geom_polygon(aes(x = lng, y = lat, group = area, fill = regionkode),
+               color = "black", show.legend = FALSE) +
+  coord_cartesian() +
+  theme_map()
 ```
 
 #### Plot municipalities
-```{r}
-data("geo_mun")
-geo_mun@data$komkode <- as.numeric(geo_mun@data$komkode)
+```{r municipalities}
+dk_municipalities <- geo_get_spatial("Danish municipalities")
 
-pal <- colorNumeric(
-  palette = "Reds",
-  domain = geo_mun$komkode)
+df_municipalities <- make_tidy_poly(dk_municipalities)
 
-leaflet(geo_mun) %>%
-  addPolygons(stroke = FALSE, smoothFactor = 0.2, fillOpacity = 1,
-              color = ~pal(komkode))
+ggplot(df_municipalities) +
+  geom_polygon(aes(x = lng, y = lat, group = area, fill = komkode),
+               color = "black", show.legend = FALSE) +
+  coord_cartesian() +
+  theme_map()
 ```
 
 #### Plot police districts
-```{r}
-data("geo_pol")
-geo_pol@data$polkr_nr <- as.numeric(geo_pol@data$polkr_nr)
+```{r police_districts}
+dk_police_districts <- geo_get_spatial("Danish police districts")
 
-pal <- colorNumeric(
-  palette = "Set3",
-  domain = geo_pol$polkr_nr)
+df_police_districts <- make_tidy_poly(dk_police_districts)
 
-leaflet(geo_pol) %>%
-  addPolygons(stroke = FALSE, smoothFactor = 0.2, fillOpacity = 1,
-              color = ~pal(polkr_nr))
+ggplot(df_police_districts) +
+  geom_polygon(aes(x = lng, y = lat, group = area, fill = polkr_nr),
+               color = "black", show.legend = FALSE) +
+  coord_cartesian() +
+  theme_map()
 ```
 
+#### Plot zip codes
+```{r zip_codes}
+dk_zip_codes <- geo_get_spatial("Danish zip codes")
+
+df_zip_codes <- make_tidy_poly(dk_zip_codes)
+
+ggplot(df_zip_codes) +
+  geom_polygon(aes(x = lng, y = lat, group = area, fill = postnr_txt),
+               color = "black", show.legend = FALSE) +
+  coord_cartesian() +
+  theme_map()
+```
