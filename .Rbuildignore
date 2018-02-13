@@ -2,7 +2,4 @@
 ^\.Rproj\.user$
 ^README\.Rmd$
 ^README-.*\.png$
-/nonpackage
-/script
-/inst
-/dev
+^nonpackage$

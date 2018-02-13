@@ -12,7 +12,7 @@ You can install geoDK from github with:
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("56north/geoDK")
+devtools::install_github("mikkelkrogsholm/geoDK")
 ```
 
 Polygons
@@ -23,115 +23,164 @@ geoDK contains polygon data for a range of danish administrative areas. It has d
 -   parishes
 -   zip codes
 -   municipalities
--   rural areas
 -   regions
+-   police districts
+-   jurisdictions
+-   constituencies
 
 Let me show you a few examples.
 
-#### First load packages and necessary data
+#### First load packages
 
 ``` r
 library(geoDK)
-
-data("region.polygon")
-```
-
-#### Plot it using `ggplot()`
-
-We can also plot the data using ggplot2. We just need to do a little data wrangling to make the data plotable through ggplot2.
-
-``` r
-# Load ggplot2
 library(ggplot2)
-
-# Load ggthemes to get the theme_map() function
 library(ggthemes)
-
-# We need to fortify the polygon. It basically takes the polygon and turns it into a 
-# data frame that ggplot2 can use for plotting.
-region.df = fortify(region.polygon)
-#> Loading required package: sp
-#> Regions defined for each Polygons
-
-# Lets have a look at it
-head(region.df, 10)
-#>        long      lat order  hole piece id group
-#> 1  10.60365 57.72044     1 FALSE     1  0   0.1
-#> 2  10.59572 57.71650     2 FALSE     1  0   0.1
-#> 3  10.59356 57.71694     3 FALSE     1  0   0.1
-#> 4  10.59210 57.71917     4 FALSE     1  0   0.1
-#> 5  10.58851 57.71924     5 FALSE     1  0   0.1
-#> 6  10.58768 57.71879     6 FALSE     1  0   0.1
-#> 7  10.58241 57.71654     7 FALSE     1  0   0.1
-#> 8  10.58725 57.71476     8 FALSE     1  0   0.1
-#> 9  10.58313 57.71415     9 FALSE     1  0   0.1
-#> 10 10.58263 57.71420    10 FALSE     1  0   0.1
 ```
 
-What a nice tidy data frame. Now lets plot it.
+#### Plot regions
 
 ``` r
-# First we give ggplot() the data frame, then we specify long and lat on the axis
-# and we tell it to group by group and give fill-color by id.
-ggplot(region.df, aes(long, lat, group = group, fill = id)) + 
-  # Then we plot the polygons
-  geom_polygon(show.legend = F) +
-  # Then we draw white lines to separate the regions
-  geom_path(color="white") + 
-  # Finally we apply the map theme
+dk_regions <- geo_get_spatial("Danish regions")
+
+df_regions <- make_tidy_poly(dk_regions)
+
+ggplot(df_regions) +
+  geom_polygon(aes(x = lng, y = lat, group = area, fill = regionkode),
+               color = "black", show.legend = FALSE) +
+  coord_cartesian() +
   theme_map()
-#> Warning: `panel.margin` is deprecated. Please use `panel.spacing` property
-#> instead
 ```
 
-![](README-unnamed-chunk-3-1.png)
-
-Since this is a ggplot object it also means that you can you all sorts of things to it. Like put an underlying map under it.
-
-#### Plot it with `ggmap()` and `ggplot()`
+#### Plot municipalities
 
 ``` r
-library(ggmap)
-#> Google Maps API Terms of Service: http://developers.google.com/maps/terms.
-#> Please cite ggmap if you use it: see citation("ggmap") for details.
+dk_municipalities <- geo_get_spatial("Danish municipalities")
 
-# First we get map data for our underlying map. 
-mymap <- get_map(location = c(min(region.df$long), min(region.df$lat),
-                              max(region.df$long), max(region.df$lat)),
-                source = "osm")
+df_municipalities <- make_tidy_poly(dk_municipalities)
+
+ggplot(df_municipalities) +
+  geom_polygon(aes(x = lng, y = lat, group = area, fill = komkode),
+               color = "black", show.legend = FALSE) +
+  coord_cartesian() +
+  theme_map()
 ```
 
-With our new map we can easily overlay the ggplot2 elements from above. Lets draw red regional boundaries on the map.
+#### Plot police districts
 
 ``` r
-ggmap(mymap) +
-  geom_path(data = region.df, aes(long, lat, group = group), color = "red")
+dk_police_districts <- geo_get_spatial("Danish police districts")
+
+df_police_districts <- make_tidy_poly(dk_police_districts)
+
+ggplot(df_police_districts) +
+  geom_polygon(aes(x = lng, y = lat, group = area, fill = polkr_nr),
+               color = "black", show.legend = FALSE) +
+  coord_cartesian() +
+  theme_map()
 ```
 
-![](README-unnamed-chunk-5-1.png)
-
-Or lets fill the map with our regions
+#### Plot zip codes
 
 ``` r
-ggmap(mymap) +
-  geom_polygon(data = region.df, aes(long, lat, group = group, fill = id), show.legend = F) +
-  geom_path(data = region.df, aes(long, lat, group = group), color = "red")
+dk_zip_codes <- geo_get_spatial("Danish zip codes")
+
+df_zip_codes <- make_tidy_poly(dk_zip_codes)
+
+ggplot(df_zip_codes) +
+  geom_polygon(aes(x = lng, y = lat, group = area, fill = postnr_txt),
+               color = "black", show.legend = FALSE) +
+  coord_cartesian() +
+  theme_map()
 ```
 
-![](README-unnamed-chunk-6-1.png)
-
-#### Plot it with `leaflet()`
-
-It is also really easy to plot it interactively with the leaflet package.
+#### Plot parishes
 
 ``` r
-library(leaflet)
+dk_parishes <- geo_get_spatial("Danish parishes")
 
-leaflet(region.polygon) %>%
-  addTiles() %>%
-  addPolygons()
+df_parishes <- make_tidy_poly(dk_parishes)
+
+ggplot(df_parishes) +
+  geom_polygon(aes(x = lng, y = lat, group = area, fill = sognekode),
+               color = "black", show.legend = FALSE) +
+  coord_cartesian() +
+  theme_map()
 ```
 
-![](plot1.png)
+#### Plot jurisdictions
 
-Voila! Interactive map.
+``` r
+dk_jurisdictions <- geo_get_spatial("Danish jurisdictions")
+
+df_jurisdictions <- make_tidy_poly(dk_jurisdictions)
+
+ggplot(df_jurisdictions) +
+  geom_polygon(aes(x = lng, y = lat, group = area, fill = retskrnr),
+               color = "black", show.legend = FALSE) +
+  coord_cartesian() +
+  theme_map()
+```
+
+#### Plot constituencies
+
+``` r
+dk_constituencies <- geo_get_spatial("Danish constituencies")
+
+df_constituencies <- make_tidy_poly(dk_constituencies)
+
+ggplot(df_constituencies) +
+  geom_polygon(aes(x = lng, y = lat, group = area, fill = storkrnr), show.legend = FALSE) +
+  coord_cartesian() +
+  theme_map()
+```
+
+Place names
+-----------
+
+geoDK contains spatial data for a range of danish place names It has data for:
+
+-   areas
+-   lines
+-   points
+
+Let me show you a few examples.
+
+#### Plot area
+
+``` r
+placename_area <- geo_get_spatial("Danish placenames - areas")
+
+# Pick only islands
+placename_area_sub <- subset(placename_area, placename_area$feat_type == "ø")
+
+placename_area_sub_df <- make_tidy_poly(placename_area_sub)
+
+ggplot(placename_area_sub_df) +
+  geom_polygon(aes(x = lng, y = lat, group = area), show.legend = FALSE,
+               fill = "black") +
+  coord_cartesian() +
+  theme_map()
+```
+
+#### Plot lines
+
+``` r
+placename_lines <- geo_get_spatial("Danish placenames - lines")
+
+# Pick only water streams
+placename_lines_sub <- subset(placename_lines, placename_lines$feat_type == "vandløb")
+
+plot(placename_lines_sub)
+```
+
+#### Plot points
+
+``` r
+placename_points <- geo_get_spatial("Danish placenames - points")
+
+# Pick only passage graves
+placename_points_sub <- subset(placename_points, placename_points$feat_type == "jættestue")
+
+plot(placename_lines_sub)
+```
