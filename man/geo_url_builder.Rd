@@ -13,7 +13,7 @@ geo_url_builder(...)
 a url
 }
 \description{
-The function builds the url needed in the geo_getter() function. It is not
+The function builds the url needed in the \code{\link{geo_getter}} function. It is not
 exported.
 }
 \examples{
@@ -22,6 +22,7 @@ login <- 'xxx'
 password <- 'yyy'
 
 # Build url
-geo_url_builder(method = "adresse", vejnavn = "Rentemestervej", postnr = "2400", hits = "50", login = login, password = password)
+geoDK:::geo_url_builder(method = "adresse", vejnavn = "Rentemestervej", postnr = "2400",
+                        hits = "50", login = login, password = password)
 
 }

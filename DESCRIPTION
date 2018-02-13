@@ -4,13 +4,25 @@ Title: Provides Danish GIS data
 Version: 0.0.1.9999
 Author: Mikkel Freltoft Krogsholm
 Maintainer: Mikkel Freltoft Krogsholm <mikkel@56n.dk>
-Description: Provides data from Geodatestyrelsens REST API. Terms apply. 
+Description: Provides data from Geodatestyrelsen. Terms apply. 
     Read more at: <https://kortforsyningen.dk/indhold/vilkaar-og-betingelser>.
 LazyData: TRUE
 License: MIT + file LICENSE
 RoxygenNote: 6.0.1
+Depends:
+  R (>= 2.10)
 Imports:
     httr,
     purrr,
     rgdal,
-    jsonlite
+    jsonlite,
+    magrittr,
+    dplyr,
+    tibble,
+    tidyr
+Suggests:
+    testthat,
+    ggplot2
+URL: https://github.com/mikkelkrogsholm/geoDK
+BugReports: https://github.com/mikkelkrogsholm/geoDK/issues
+Encoding: UTF-8
