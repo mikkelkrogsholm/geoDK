@@ -4,7 +4,7 @@
 \alias{geo_get_spatial}
 \title{Get Danish spatial data}
 \usage{
-geo_get_spatial(spatial)
+geo_get_spatial(spatial, quiet = TRUE)
 }
 \arguments{
 \item{spatial}{one of "Danish zip codes", "Danish regions", "Danish police districts",

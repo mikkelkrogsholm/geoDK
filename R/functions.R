@@ -37,7 +37,7 @@
 #'   coord_cartesian() +
 #'   theme_minimal()
 #'
-geo_get_spatial <- function(spatial){
+geo_get_spatial <- function(spatial, quiet = TRUE){
 
   if(missing(spatial)) stop("Please enter a value for spatial")
 
@@ -45,7 +45,7 @@ geo_get_spatial <- function(spatial){
 
   my_temp <- base::tempfile()
   href <- lut %>% dplyr::filter(desc == spatial) %>% dplyr::pull(href)
-  utils::download.file(href, destfile = my_temp)
+  utils::download.file(href, destfile = my_temp, quiet = quiet)
   poly <- base::readRDS(my_temp)
 
   return(poly)
